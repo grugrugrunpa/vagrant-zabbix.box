@@ -1,0 +1,36 @@
+- hosts: all
+  tasks:
+   - name: install
+     yum: name=libselinux-python state=present
+
+   - name: disable selinux
+     selinux: state=disabled
+
+- hosts: master
+  roles:
+#   - { role: geerlingguy.postgresql }
+   - role: geerlingguy.mysql
+   - role: dj-wasabi.zabbix-server
+     zabbix_url: 192.168.33.50
+     database_type: mysql
+     database_type_long: mysql
+
+- hosts: all
+  roles:
+   - role: dj-wasabi.zabbix-agent
+     agent_server: 192.168.33.50
+     agent_serveractive: 192.168.33.50
+     zabbix_url: http://192.168.33.50
+     zabbix_api_use: true 
+     zabbix_api_user: Admin
+     zabbix_api_pass: zabbix
+     zabbix_create_host: present
+     zabbix_host_groups:
+      - Linux Servers
+     zabbix_link_templates:
+      - Template OS Linux
+      - Apache APP Template
+#     zabbix_macros:
+#      - macro_key: apache_type
+#        macro_value: reverse_proxy
+   - role: mrlesmithjr.snmpd
