@@ -13,17 +13,15 @@ Vagrant.configure("2") do |config|
   ["master01", "node01", "node02", "node03"].each_with_index do |n,i|
   	config.vm.define n do |v|
 	 v.vm.hostname = n
-	 v.vm.network :private_network, 
-	 	ip: "192.168.33.#{50+i}"
-	 v.vm.provision "ansible" do |ansible|
-       ansible.playbook = "provision.yml"
-       ansible.sudo = true
-       ansible.verbose = 'vvv'
-       ansible.host_key_checking = false
-       ansible.inventory_path = "hosts.ini"
-       ansible.limit = i == 0 ? "master" : "slave"
-	 end
+	 v.vm.network :private_network, ip: "192.168.33.#{50+i}"
 	end
   end
-
+  config.vm.provision "ansible" do |ansible|
+   ansible.playbook = "site.yml"
+   ansible.sudo = true
+   ansible.verbose = 'vvv'
+   ansible.host_key_checking = false
+   ansible.inventory_path = "production"
+#   ansible.limit = i == 0 ? "master" : "slave"
+  end
 end

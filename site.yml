@@ -9,6 +9,7 @@
 - hosts: master
   roles:
 #   - { role: geerlingguy.postgresql }
+   - role: hswong3i.hostname
    - role: geerlingguy.mysql
    - role: dj-wasabi.zabbix-server
      zabbix_url: 192.168.33.50
